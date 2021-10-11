@@ -581,6 +581,10 @@ struct Image // Image (Texture)
    void drawMaskNoFilter (C Color &color, C Color &color_add, C Rect &rect, C Image &mask, C Rect &mask_rect)C; // draw image using 'mask', final result is calculated as: this*           mask   *color+color_add, uses FILTER_NONE for this, but FILTER_LINEAR for 'mask'
    void drawMaskA        (C Color &color, C Color &color_add, C Rect &rect, C Image &mask, C Rect &mask_rect)C; // draw image using 'mask', final result is calculated as: this*Vec4(1,1,1,mask.a)*color+color_add
    void drawMaskANoFilter(C Color &color, C Color &color_add, C Rect &rect, C Image &mask, C Rect &mask_rect)C; // draw image using 'mask', final result is calculated as: this*Vec4(1,1,1,mask.a)*color+color_add, uses FILTER_NONE for this, but FILTER_LINEAR for 'mask'
+   void drawMaskRotate   (C Color& color, C Color& color_add, C Rect& rect, C Image& mask, C Rect& mask_rect, Flt angle, C Vec2* rotation_center_uv = null)C;
+   void drawMaskNoFilterRotate(C Color& color, C Color& color_add, C Rect& rect, C Image& mask, C Rect& mask_rect, Flt angle, C Vec2* rotation_center_uv = null)C;
+   void drawMaskARotate(C Color& color, C Color& color_add, C Rect& rect, C Image& mask, C Rect& mask_rect, Flt angle, C Vec2* rotation_center_uv = null)C;
+   void drawMaskANoFilterRotate(C Color& color, C Color& color_add, C Rect& rect, C Image& mask, C Rect& mask_rect, Flt angle, C Vec2* rotation_center_uv = null)C;
 
    // draw faded
    void drawFadeLR(C Color &color, C Rect &rect, Flt trans_l, Flt opaque_l, Flt opaque_r, Flt trans_r)C; // draw and fade out left/right sides, 'trans_l'=X screen coordinate where left part is fully transparent, 'opaque_l'=X screen coordinate where left part is fully opaque, 'opaque_r'=X screen coordinate where right part is fully opaque, 'trans_r'=X screen coordinate where right part is fully transparent

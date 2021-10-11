@@ -453,6 +453,66 @@ void Image::drawRotate(C Color &color, C Color &color_add, C Vec2 &center, C Vec
    VI.end();
 }
 /******************************************************************************/
+static void DrawMaskRotate(C Image& image, C Color& color, C Color& color_add, C Rect& rect, C Image& mask, C Rect& mask_rect, C Shader* shader, Flt angle, C Vec2* rotation_center_uv)
+{
+    Rect r; r.from(rect.min, rect.max); // needed in case      'rect' is flipped
+    Rect m; m.from(mask_rect.min, mask_rect.max); // needed in case 'mask_rect' is flipped
+    Rect rm = r & m;
+    if (rm.valid())
+    {
+        VI.color(color);
+        VI.color1(color_add);
+        Sh.Img[0]->set(image);
+        Sh.Img[1]->set(mask);
+        VI.setType(VI_2D_TEX2, VI_STRIP);
+        VI.shader(shader);
+        if (Vtx2DTex2* v = (Vtx2DTex2*)VI.addVtx(4))
+        {
+            Vec2 c = (rotation_center_uv ? *rotation_center_uv : 0.5f);
+            c.x *= (rm.size().x);
+            c.y *= (-rm.size().y);
+            Matrix2P m1;
+            m1.orn().setRotate(angle);
+            m1.pos = rm.center() - c * m1.orn();
+
+            v[0].pos.set(0, 0) *= m1;
+            v[1].pos.set(rm.size().x, 0) *= m1;
+            v[2].pos.set(0, -rm.size().y) *= m1;
+            v[3].pos.set(rm.size().x, -rm.size().y) *= m1;
+
+            v[0].tex[0].x = v[2].tex[0].x = LerpR(rect.min.x, rect.max.x, rm.min.x); // min x
+            v[1].tex[0].x = v[3].tex[0].x = LerpR(rect.min.x, rect.max.x, rm.max.x); // max x
+            v[0].tex[0].y = v[1].tex[0].y = LerpR(rect.max.y, rect.min.y, rm.max.y); // min y
+            v[2].tex[0].y = v[3].tex[0].y = LerpR(rect.max.y, rect.min.y, rm.min.y); // max y
+
+            v[0].tex[1].x = v[2].tex[1].x = LerpR(mask_rect.min.x, mask_rect.max.x, rm.min.x); // min x
+            v[1].tex[1].x = v[3].tex[1].x = LerpR(mask_rect.min.x, mask_rect.max.x, rm.max.x); // max x
+            v[0].tex[1].y = v[1].tex[1].y = LerpR(mask_rect.max.y, mask_rect.min.y, rm.max.y); // min y
+            v[2].tex[1].y = v[3].tex[1].y = LerpR(mask_rect.max.y, mask_rect.min.y, rm.min.y); // max y
+
+            if (image.partial())
+            {
+                v[0].tex[0] *= image._part.xy;
+                v[1].tex[0] *= image._part.xy;
+                v[2].tex[0] *= image._part.xy;
+                v[3].tex[0] *= image._part.xy;
+            }
+            if (mask.partial())
+            {
+                v[0].tex[1] *= mask._part.xy;
+                v[1].tex[1] *= mask._part.xy;
+                v[2].tex[1] *= mask._part.xy;
+                v[3].tex[1] *= mask._part.xy;
+            }
+        }
+        VI.end();
+    }
+}
+void Image::drawMaskRotate(C Color& color, C Color& color_add, C Rect& rect, C Image& mask, C Rect& mask_rect, Flt angle, C Vec2* rotation_center_uv)C { DrawMaskRotate(T, color, color_add, rect, mask, mask_rect, Sh.DrawMask[0][0], angle, rotation_center_uv); }
+void Image::drawMaskNoFilterRotate(C Color& color, C Color& color_add, C Rect& rect, C Image& mask, C Rect& mask_rect, Flt angle, C Vec2* rotation_center_uv)C { DrawMaskRotate(T, color, color_add, rect, mask, mask_rect, Sh.DrawMask[0][1], angle, rotation_center_uv); }
+void Image::drawMaskARotate(C Color& color, C Color& color_add, C Rect& rect, C Image& mask, C Rect& mask_rect, Flt angle, C Vec2* rotation_center_uv)C { DrawMaskRotate(T, color, color_add, rect, mask, mask_rect, Sh.DrawMask[1][0], angle, rotation_center_uv); }
+void Image::drawMaskANoFilterRotate(C Color& color, C Color& color_add, C Rect& rect, C Image& mask, C Rect& mask_rect, Flt angle, C Vec2* rotation_center_uv)C { DrawMaskRotate(T, color, color_add, rect, mask, mask_rect, Sh.DrawMask[1][1], angle, rotation_center_uv); }
+/******************************************************************************/
 static void DrawMask(C Image &image, C Color &color, C Color &color_add, C Rect &rect, C Image &mask, C Rect &mask_rect, C Shader *shader)
 {
    Rect r; r.from(     rect.min,      rect.max); // needed in case      'rect' is flipped
