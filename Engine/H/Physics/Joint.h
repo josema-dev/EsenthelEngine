@@ -23,6 +23,7 @@ struct Joint // a Joint between 2 actors, or one actor and fixed position in wor
 
    Joint& createBodyHinge    (Actor &bone, Actor &parent, C Vec &anchor, C Vec &axis, Flt min_angle, Flt max_angle); // create body hinge     joint, 'anchor'=world space anchor position, 'axis'=world space joint axis, 'collision'=if allow for collisions between 'a0' and 'a1'
    Joint& createBodySpherical(Actor &bone, Actor &parent, C Vec &anchor, C Vec &axis, Flt swing    , Flt twist    ); // create body spherical joint, 'anchor'=world space anchor position, 'axis'=world space joint axis, 'swing'=maximum allowed swing angle rotation (0..PI), 'twist'=maximum allowed twist angle rotation (0..PI)
+   Joint& createBodySpherical(Actor &bone, Actor &parent, C Vec &anchor, C Vec &axis, Flt swingY, Flt swingZ, Flt twist);
 
    // get / set
    Bool   is       (                             )C {return _joint!=null;} // if  created
@@ -42,6 +43,25 @@ struct Joint // a Joint between 2 actors, or one actor and fixed position in wor
    Flt  hingeDriveForceLimit()C;   Joint& hingeDriveForceLimit(Flt  limit); // get/set the maximum torque the drive can exert, setting this to a very large value if 'hingeDriveVel' is also very large may cause unexpected results, 0..Inf, default=Inf
    Flt  hingeDriveGearRatio ()C;   Joint& hingeDriveGearRatio (Flt  ratio); // get/set the gear ratio for the drive, when setting up the drive constraint, the velocity of the first actor is scaled by this value, and its response to drive torque is scaled down. So if the drive target velocity is zero, the second actor will be driven to the velocity of the first scaled by the gear ratio. 0..Inf, default=1
 
+   //spherical joint specific (following methods are supported only on Physx)
+   enum class SphericalMotion
+   {
+	   eLOCKED,	//!< The DOF is locked, it does not allow relative motion.
+	   eLIMITED,	//!< The DOF is limited, it only allows motion within a specific range.
+	   eFREE		//!< The DOF is free and has its full range of motion.
+   };
+
+   enum class SphericalAxis
+   {
+	   eTWIST = 3,	//!< motion around the X axis
+	   eSWING1 = 4,	//!< motion around the Y axis
+	   eSWING2 = 5,	//!< motion around the Z axis
+   };
+   void setSwingLimit(Flt swing1, Flt swing2);
+   void setTwistLimit(Flt twist);
+   void setMotion(SphericalAxis axis, SphericalMotion motion);
+
+   //void setMotion(Flt angle, SpericalAxis axis, SpericalMotion motion = SpericalMotion::eLIMITED);
    // io
    Bool save(File &f                      )C; // save, does not save information about which actors are joined, false on fail
    Bool load(File &f, Actor &a0, Actor *a1) ; // load, 'a0' and 'a1' are actors which the joint should link, false on fail
