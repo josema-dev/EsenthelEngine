@@ -80,6 +80,9 @@ Bool Ragdoll::createTry(C AnimatedSkeleton &anim_skel, Flt scale, Flt density, B
                body=_bones.elms();
               _resets.add(i); // add main bone for resetting
             }
+            else
+                if (sbon.type == BONE_HEAD)
+                    width *= 0.7;
 
             Shape &s =shapes.New(); s=ShapeBone(from, to, width);
             Bone  &rb=_bones.New(); Set(rb.name, sbon.name);
@@ -136,23 +139,112 @@ Bool Ragdoll::createTry(C AnimatedSkeleton &anim_skel, Flt scale, Flt density, B
              C SkelBone &sp=skel.bones[rp.skel_bone  ];
                if(sb.type==BONE_HEAD)
                {
-                  if(sp.type==BONE_NECK)_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(30), DegToRad(35));
-                  else                  _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(50), DegToRad(40));
-               }else
-               if(sb.type==BONE_NECK                         )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad( 20), DegToRad( 5));else
-               if(sb.type==BONE_SHOULDER                     )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(  5), DegToRad( 5));else
-               if(sb.type==BONE_UPPER_ARM                    )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad( 80), DegToRad(30));else
-               if(sb.type==BONE_UPPER_LEG                    )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(155), DegToRad(25));else
-               if(sb.type==BONE_SPINE                        )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad( 40), DegToRad(30));else
-
-               if(sb.type==BONE_FOOT                         )_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(1, 0,0), -DegToRad(45), DegToRad( 45));else
-               if(sb.type==BONE_HAND      && sb.type_index< 0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0, 1,0), -DegToRad(80), DegToRad( 80));else
-               if(sb.type==BONE_HAND      && sb.type_index>=0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0,-1,0), -DegToRad(80), DegToRad( 80));else
-               if(sb.type==BONE_LOWER_ARM && sb.type_index< 0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0, 1,0),            0 , DegToRad(140));else
-               if(sb.type==BONE_LOWER_ARM && sb.type_index>=0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0,-1,0),            0 , DegToRad(140));else
-               if(sb.type==BONE_LOWER_LEG                    )_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(1, 0,0),            0 , DegToRad(150));else
-
-                                                              _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(40), DegToRad(30));
+                   if (sp.type == BONE_NECK)
+                   {
+                       _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, sb.dir, DegToRad(15), DegToRad(25), DegToRad(25));
+                   }
+                   else
+                   {
+                       _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, sb.dir, DegToRad(15), DegToRad(25), DegToRad(25));
+                   }
+               }
+               else
+               {
+                   if (sb.type == BONE_NECK)
+                   {
+                       _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, sb.dir, DegToRad(5), DegToRad(45), DegToRad(45));
+                       _joints.last().setMotion(EE::Joint::SphericalAxis::eSWING2, EE::Joint::SphericalMotion::eLOCKED);
+                       _joints.last().setMotion(EE::Joint::SphericalAxis::eTWIST, EE::Joint::SphericalMotion::eLOCKED);
+                   }
+                   else
+                   {
+                       if (sb.type == BONE_SHOULDER)
+                       {
+                           _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, sb.dir, DegToRad(5), DegToRad(15), DegToRad(25));
+                       }
+                       else
+                       {
+                           if (sb.type == BONE_UPPER_ARM)
+                           {
+                               _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, sb.dir, DegToRad(90), DegToRad(35), DegToRad(25));
+                           }
+                           else
+                           {
+                               if (sb.type == BONE_UPPER_LEG)
+                               {
+                                   _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, sb.dir, DegToRad(65), DegToRad(45), DegToRad(45));
+                                   _joints.last().setMotion(EE::Joint::SphericalAxis::eSWING2, EE::Joint::SphericalMotion::eLOCKED);
+                                   _joints.last().setMotion(EE::Joint::SphericalAxis::eTWIST, EE::Joint::SphericalMotion::eLOCKED);
+                               }
+                               else
+                               {
+                                   if (sb.type == BONE_SPINE)
+                                   {
+                                       _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, sb.dir, DegToRad(5), DegToRad(15), DegToRad(25));
+                                   }
+                                   else
+                                   {
+                                       if (sb.type == BONE_FOOT)
+                                       {
+                                           _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, Vec(1, 0, 0), DegToRad(35), DegToRad(25), DegToRad(45));
+                                           _joints.last().setMotion(EE::Joint::SphericalAxis::eSWING2, EE::Joint::SphericalMotion::eLOCKED);
+                                           _joints.last().setMotion(EE::Joint::SphericalAxis::eTWIST, EE::Joint::SphericalMotion::eLOCKED);
+                                       }
+                                       else
+                                       {
+                                           if (sb.type == BONE_HAND && sb.type_index < 0)
+                                           {
+                                               _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, Vec(0, 1, 0), -DegToRad(80), DegToRad(80));
+                                               _joints.last().setSwingLimit(DegToRad(35), DegToRad(25));
+                                               _joints.last().setMotion(EE::Joint::SphericalAxis::eTWIST, EE::Joint::SphericalMotion::eLOCKED);
+                                           }
+                                           else
+                                           {
+                                               if (sb.type == BONE_HAND && sb.type_index >= 0)
+                                               {
+                                                   _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, Vec(0, -1, 0), -DegToRad(80), DegToRad(80));
+                                                   _joints.last().setSwingLimit(DegToRad(35), DegToRad(25));
+                                                   _joints.last().setMotion(EE::Joint::SphericalAxis::eTWIST, EE::Joint::SphericalMotion::eLOCKED);
+                                               }
+                                               else
+                                               {
+                                                   if (sb.type == BONE_LOWER_ARM && sb.type_index < 0)
+                                                   {
+                                                       _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, Vec(0, 1, 0), DegToRad(45), DegToRad(45), DegToRad(45));
+                                                       _joints.last().setMotion(EE::Joint::SphericalAxis::eSWING2, EE::Joint::SphericalMotion::eLOCKED);
+                                                       _joints.last().setMotion(EE::Joint::SphericalAxis::eTWIST, EE::Joint::SphericalMotion::eLOCKED);
+                                                   }
+                                                   else
+                                                   {
+                                                       if (sb.type == BONE_LOWER_ARM && sb.type_index >= 0)
+                                                       {
+                                                           _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, Vec(0, -1, 0), DegToRad(45), DegToRad(45), DegToRad(45));
+                                                           _joints.last().setMotion(EE::Joint::SphericalAxis::eSWING2, EE::Joint::SphericalMotion::eLOCKED);
+                                                           _joints.last().setMotion(EE::Joint::SphericalAxis::eTWIST, EE::Joint::SphericalMotion::eLOCKED);
+                                                       }
+                                                       else
+                                                       {
+                                                           if (sb.type == BONE_LOWER_LEG)
+                                                           {
+                                                               _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, Vec(1, 0, 0), DegToRad(65), DegToRad(45), DegToRad(45));
+                                                               _joints.last().setMotion(EE::Joint::SphericalAxis::eSWING2, EE::Joint::SphericalMotion::eLOCKED);
+                                                               _joints.last().setMotion(EE::Joint::SphericalAxis::eTWIST, EE::Joint::SphericalMotion::eLOCKED);
+                                                           }
+                                                           else
+                                                           {
+                                                               _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos * _scale, sb.dir, DegToRad(40), DegToRad(30));
+                                                           }
+                                                       }
+                                                   }
+                                               }
+                                           }
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                   }
+               }
             }
          }
 
