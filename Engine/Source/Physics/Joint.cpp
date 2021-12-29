@@ -266,17 +266,19 @@ static void CreateSpherical(Joint &joint, Actor &a0, Actor *a1, C Vec local_anch
            spherical->setMotion(PxD6Axis::eSWING1, swingY ? PxD6Motion::eLIMITED : PxD6Motion::eFREE);
            spherical->setMotion(PxD6Axis::eSWING2, swingZ ? PxD6Motion::eLIMITED : PxD6Motion::eFREE);
            spherical->setMotion(PxD6Axis::eTWIST, twistX ? PxD6Motion::eLIMITED : PxD6Motion::eFREE);
+           spherical->setProjectionAngularTolerance(PI);
+           spherical->setProjectionLinearTolerance(5.0);
            if (swingY && swingZ)
            {
                Flt valueY = Mid(*swingY, EPS, PI - EPS);
                Flt valueZ = Mid(*swingZ, EPS, PI - EPS);
-               PxJointLimitCone limit(valueY, valueZ); if (body) { limit.restitution = BOUNCE; limit.stiffness = SPRING; limit.damping = DAMPING; }
+               PxJointLimitCone limit(valueY, valueZ); if (body) { limit.restitution = 0.0f; limit.stiffness = 50.0f; limit.damping = 5.0f; limit.contactDistance = 1.0f; }
                spherical->setSwingLimit(limit);
            }
            if (twistX)
            {
                Flt value = Mid(*twistX, 0, PI);
-               PxJointAngularLimitPair limit(-value, value); if (body) { limit.restitution = BOUNCE; limit.stiffness = SPRING; limit.damping = DAMPING; }
+               PxJointAngularLimitPair limit(-value, value); if (body) { limit.restitution = 0.0f; limit.stiffness = 50.0f; limit.damping = 5.0f; limit.contactDistance = 1.0f; }
                spherical->setTwistLimit(limit);
            }
            joint._joint = spherical;
@@ -671,7 +673,7 @@ void Joint::setSwingLimit(Flt swing1, Flt swing2)
 
             Flt valueY = Mid(swing1, EPS, PI - EPS);
             Flt valueZ = Mid(swing2, EPS, PI - EPS);
-            PxJointLimitCone limit(valueY, valueZ); if (true) { limit.restitution = BOUNCE; limit.stiffness = SPRING; limit.damping = DAMPING; }
+            PxJointLimitCone limit(valueY, valueZ); if (true) { limit.restitution = 0.0f; limit.stiffness = 50.0f; limit.damping = 5.0f; limit.contactDistance = 1.0f; }
             spherical->setSwingLimit(limit);
         }
     }
@@ -688,7 +690,7 @@ void Joint::setTwistLimit(Flt twist)
             spherical->setMotion(PxD6Axis::eTWIST, PxD6Motion::eLIMITED);
 
             Flt value = Mid(twist, 0, PI);
-            PxJointAngularLimitPair limit(-value, value); if (true) { limit.restitution = BOUNCE; limit.stiffness = SPRING; limit.damping = DAMPING; }
+            PxJointAngularLimitPair limit(-value, value); if (true) { limit.restitution = 0.0f; limit.stiffness = 50.0f; limit.damping = 5.0f; limit.contactDistance = 1.0f; }
             spherical->setTwistLimit(limit);
         }
     }

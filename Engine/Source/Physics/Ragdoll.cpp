@@ -118,9 +118,16 @@ Bool Ragdoll::createTry(C AnimatedSkeleton &anim_skel, Flt scale, Flt density, B
             }
          }
 
-         if(sb.type==BONE_HEAD)rb.actor.adamping(7);
-         else                  rb.actor.adamping(4);
-                               rb.actor. damping(0.5f).sleepEnergy(0.1f);
+         if (sb.type == BONE_HEAD || sb.type == BONE_FOOT)
+         {
+             rb.actor.adamping(50);
+             rb.actor.damping(0.01);
+         }
+         else
+         {
+             rb.actor.adamping(0);
+             rb.actor.damping(0.01f);// .sleepEnergy(0.1f);
+         }
       }
 
       if(!kinematic)
@@ -254,6 +261,14 @@ Bool Ragdoll::createTry(C AnimatedSkeleton &anim_skel, Flt scale, Flt density, B
                if(Cuts(shapes[i], shapes[j]))
                   bone(i).actor.ignore(bone(j).actor);
       }
+      
+      REP(T.bones()) {
+          //bone(i).actor._dynamic->setMaxDepenetrationVelocity(0.1);
+          bone(i).actor._dynamic->setSolverIterationCounts(8, 1);
+          bone(i).actor._dynamic->setSleepThreshold(1.0f);
+          bone(i).actor._dynamic->setStabilizationThreshold(1.0f);
+      }
+
      _aggr.create(bones()); REPA(T)_aggr.add(bone(i).actor);
       return true;
    }
