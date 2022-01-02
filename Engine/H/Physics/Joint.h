@@ -21,8 +21,9 @@ struct Joint // a Joint between 2 actors, or one actor and fixed position in wor
    Joint& createSliding  (Actor &a0, Actor *a1, C Vec &anchor , C Vec &dir    ,   Flt min, Flt max                       , Bool collision=false); // create sliding   joint, 'anchor'=world space anchor position, 'dir' =world space sliding direction, 'min'=minumum allowed distance along 'dir' (-Inf..'max'), 'max'=maximum allowed distance along 'dir' ('min'..Inf)
    Joint& createDist     (Actor &a0, Actor *a1, C Vec &anchor0, C Vec &anchor1,   Flt min, Flt max, C Spring *spring=null, Bool collision=false); // create distance based joint, here 'anchor0 anchor1' are in local spaces of actors
 
-   Joint& createBodyHinge    (Actor &bone, Actor &parent, C Vec &anchor, C Vec &axis, Flt min_angle, Flt max_angle); // create body hinge     joint, 'anchor'=world space anchor position, 'axis'=world space joint axis, 'collision'=if allow for collisions between 'a0' and 'a1'
-   Joint& createBodySpherical(Actor &bone, Actor &parent, C Vec &anchor, C Vec &axis, Flt swing    , Flt twist    ); // create body spherical joint, 'anchor'=world space anchor position, 'axis'=world space joint axis, 'swing'=maximum allowed swing angle rotation (0..PI), 'twist'=maximum allowed twist angle rotation (0..PI)
+   Joint& createBodyHinge    (Actor &bone, Actor &parent, C Vec &anchor, C Vec &axis, Flt min_angle, Flt max_angle         ); // create body hinge     joint, 'anchor'=world space anchor position, 'axis'=world space joint axis, 'collision'=if allow for collisions between 'a0' and 'a1'
+   Joint& createBodySpherical(Actor &bone, Actor &parent, C Vec &anchor, C Vec &axis, Flt swing    , Flt twist             ); // create body spherical joint, 'anchor'=world space anchor position, 'axis'=world space joint axis, 'swing'=maximum allowed swing angle rotation (0..PI), 'twist'=maximum allowed twist angle rotation (0..PI)
+   Joint& createBodySpherical(Actor& bone, Actor& parent, C Vec& anchor, C Vec& axis, Flt swingY   , Flt swingZ, Flt twistX); // create body spherical joint, 'anchor'=world space anchor position, 'axis'=world space joint axis, 'swing'=maximum allowed swing angle rotation (0..PI), 'twist'=maximum allowed twist angle rotation (0..PI)
 
    // get / set
    Bool   is       (                             )C {return _joint!=null;} // if  created

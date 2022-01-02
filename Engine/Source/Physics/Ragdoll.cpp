@@ -79,7 +79,8 @@ Bool Ragdoll::createTry(C AnimatedSkeleton &anim_skel, Flt scale, Flt density, B
             {
                body=_bones.elms();
               _resets.add(i); // add main bone for resetting
-            }
+            }else
+            if(sbon.type==BONE_HEAD)width*=0.7;
 
             Shape &s =shapes.New(); s=ShapeBone(from, to, width);
             Bone  &rb=_bones.New(); Set(rb.name, sbon.name);
@@ -115,7 +116,7 @@ Bool Ragdoll::createTry(C AnimatedSkeleton &anim_skel, Flt scale, Flt density, B
             }
          }
 
-         if(sb.type==BONE_HEAD)rb.actor.adamping(7);
+         if(sb.type==BONE_HEAD)rb.actor.adamping(50);
          else                  rb.actor.adamping(4);
                                rb.actor. damping(0.5f).sleepEnergy(0.1f);
       }
@@ -136,23 +137,23 @@ Bool Ragdoll::createTry(C AnimatedSkeleton &anim_skel, Flt scale, Flt density, B
              C SkelBone &sp=skel.bones[rp.skel_bone  ];
                if(sb.type==BONE_HEAD)
                {
-                  if(sp.type==BONE_NECK)_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(30), DegToRad(35));
-                  else                  _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(50), DegToRad(40));
+                  if(sp.type==BONE_NECK)_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(15.0f), DegToRad(25.0f), DegToRad(25.0f));
+                  else                  _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(15.0f), DegToRad(25.0f), DegToRad(25.0f));
                }else
-               if(sb.type==BONE_NECK                         )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad( 20), DegToRad( 5));else
-               if(sb.type==BONE_SHOULDER                     )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(  5), DegToRad( 5));else
-               if(sb.type==BONE_UPPER_ARM                    )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad( 80), DegToRad(30));else
-               if(sb.type==BONE_UPPER_LEG                    )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(155), DegToRad(25));else
-               if(sb.type==BONE_SPINE                        )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad( 40), DegToRad(30));else
+               if(sb.type==BONE_NECK                         )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad( 5.0f),            0.0f,            0.0f);else
+               if(sb.type==BONE_SHOULDER                     )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad( 5.0f), DegToRad(15.0f), DegToRad(25.0f));else
+               if(sb.type==BONE_UPPER_ARM                    )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(90.0f), DegToRad(35.0f), DegToRad(25.0f));else
+               if(sb.type==BONE_UPPER_LEG                    )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(65.0f),            0.0f,            0.0f);else
+               if(sb.type==BONE_SPINE                        )_joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad( 5.0f), DegToRad(15.0f), DegToRad(25.0f));else
 
-               if(sb.type==BONE_FOOT                         )_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(1, 0,0), -DegToRad(45), DegToRad( 45));else
-               if(sb.type==BONE_HAND      && sb.type_index< 0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0, 1,0), -DegToRad(80), DegToRad( 80));else
-               if(sb.type==BONE_HAND      && sb.type_index>=0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0,-1,0), -DegToRad(80), DegToRad( 80));else
-               if(sb.type==BONE_LOWER_ARM && sb.type_index< 0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0, 1,0),            0 , DegToRad(140));else
-               if(sb.type==BONE_LOWER_ARM && sb.type_index>=0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0,-1,0),            0 , DegToRad(140));else
-               if(sb.type==BONE_LOWER_LEG                    )_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(1, 0,0),            0 , DegToRad(150));else
+               if(sb.type==BONE_FOOT                         )_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(1, 0,0), -DegToRad(45.0f), DegToRad( 45.0f));else
+               if(sb.type==BONE_HAND      && sb.type_index< 0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0, 1,0), -DegToRad(80.0f), DegToRad( 80.0f));else
+               if(sb.type==BONE_HAND      && sb.type_index>=0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0,-1,0), -DegToRad(80.0f), DegToRad( 80.0f));else
+               if(sb.type==BONE_LOWER_ARM && sb.type_index< 0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0, 1,0),             0.0f, DegToRad(140.0f));else
+               if(sb.type==BONE_LOWER_ARM && sb.type_index>=0)_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(0,-1,0),             0.0f, DegToRad(140.0f));else
+               if(sb.type==BONE_LOWER_LEG                    )_joints.New().createBodyHinge    (rb.actor, rp.actor, sb.pos*_scale, Vec(1, 0,0),             0.0f, DegToRad(150.0f));else
 
-                                                              _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(40), DegToRad(30));
+                                                              _joints.New().createBodySpherical(rb.actor, rp.actor, sb.pos*_scale, sb.dir, DegToRad(40.0f), DegToRad(30.0f));
             }
          }
 
@@ -161,6 +162,14 @@ Bool Ragdoll::createTry(C AnimatedSkeleton &anim_skel, Flt scale, Flt density, B
             REPD(j, i)
                if(Cuts(shapes[i], shapes[j]))
                   bone(i).actor.ignore(bone(j).actor);
+#if PHYSX
+         REP(T.bones())
+         {
+            bone(i).actor._dynamic->setSolverIterationCounts(8, 1);
+            bone(i).actor._dynamic->setSleepThreshold(1.0f);
+            bone(i).actor._dynamic->setStabilizationThreshold(1.0f);
+         }
+#endif
       }
      _aggr.create(bones()); REPA(T)_aggr.add(bone(i).actor);
       return true;
